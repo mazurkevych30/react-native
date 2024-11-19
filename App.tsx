@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
-import LoginSceen from "./screens/LoginSceen";
+import RegistrationScreen from "./screens/RegistrationScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,11 +22,7 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
-  // if (!fontsLoaded) {
-  //   return <ActivityIndicator size={"large"} />;
-  // }
-
-  return <LoginSceen />;
+  return <RegistrationScreen />;
 }
 
 const styles = StyleSheet.create({
