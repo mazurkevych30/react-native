@@ -1,27 +1,45 @@
-import { StyleSheet, Text, TextInput, View, ViewProps } from "react-native";
-import React, { FC, ReactNode } from "react";
+import { StyleSheet, TextInput, View, ViewProps } from "react-native";
+import React, { FC, ReactNode, useState } from "react";
+
 import { colors } from "../styles/global";
 
 type inputProps = {
+  value: string;
   placeholder?: string;
-  outherStyles?: ViewProps["style"];
+  otherStyles?: ViewProps["style"];
   rightButton?: ReactNode;
-
+  onTextChange: (value: string) => void;
   secureTextEntry?: boolean;
 };
 
 const Input: FC<inputProps> = ({
+  value,
+  onTextChange,
   placeholder,
-  outherStyles,
+  otherStyles,
   rightButton,
   secureTextEntry = false,
 }) => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const onFocus = () => {
+    setIsFocused(true);
+  };
+
+  const onBlur = () => {
+    setIsFocused(false);
+  };
+
   return (
-    <View style={[styles.container, outherStyles]}>
+    <View style={[styles.container, isFocused && styles.focused, otherStyles]}>
       <TextInput
         style={[styles.input, styles.baseText]}
+        value={value}
         placeholder={placeholder}
+        onChangeText={onTextChange}
         secureTextEntry={secureTextEntry}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       {rightButton}
     </View>
@@ -47,5 +65,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 18,
     color: colors.black_primary,
+  },
+  focused: {
+    backgroundColor: colors.white,
+    borderColor: colors.orange,
   },
 });

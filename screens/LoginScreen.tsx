@@ -1,7 +1,6 @@
 import {
   Alert,
   Dimensions,
-  Image,
   ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
@@ -21,17 +20,15 @@ import Button from "../components/Button";
 import validateEmail from "../utils/validateEmailUtils";
 
 type Data = {
-  login: string;
   email: string;
   password: string;
 };
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen");
 
-const RegistrationScreen = () => {
+const LoginScreen = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
   const [formData, setFormData] = useState<Data>({
-    login: "",
     email: "",
     password: "",
   });
@@ -44,10 +41,10 @@ const RegistrationScreen = () => {
     setIsPasswordVisible((prev) => !prev);
   };
 
-  const onRegister = () => {
-    const { login, email, password } = formData;
+  const onLogin = () => {
+    const { email, password } = formData;
 
-    if (!login || !email || !password) {
+    if (!email || !password) {
       Alert.alert("Помилка", "Будь ласка, заповніть всі поля.");
     } else if (!validateEmail(email)) {
       Alert.alert(
@@ -55,12 +52,12 @@ const RegistrationScreen = () => {
         "Будь ласка, введіть електрону адресу у форматі example@gmail.com."
       );
     } else {
-      Alert.alert("Credentials", `${login} + ${email} + ${password}`);
+      Alert.alert("Credentials", `${email} + ${password}`);
     }
   };
 
-  const onSignIn = () => {
-    console.log("Go to login form!");
+  const onSignUp = () => {
+    console.log("Sign up!");
   };
 
   const showButton = (
@@ -75,31 +72,17 @@ const RegistrationScreen = () => {
         <ImageBackground
           source={require("../assets/images/background.png")}
           resizeMode="cover"
-          style={styles.background}
+          style={styles.image}
         />
+
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <View style={styles.formContainer}>
-            <View style={styles.userImageContainer}>
-              <Image />
-              <TouchableOpacity style={styles.buttonAdd}>
-                <Image
-                  style={styles.buttonAddImage}
-                  source={require("../assets/images/plus.png")}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.title}>Реєстрація</Text>
+            <Text style={styles.title}>Увійти</Text>
 
             <View style={[styles.innerContainer, styles.inputContainer]}>
-              <Input
-                value={formData.login}
-                placeholder="Логін"
-                onTextChange={(text) => handleChange("login", text)}
-              />
               <Input
                 value={formData.email}
                 placeholder="Адреса електронної пошти"
@@ -116,7 +99,7 @@ const RegistrationScreen = () => {
             </View>
 
             <View style={[styles.innerContainer, styles.buttonContainer]}>
-              <Button onPress={onRegister}>
+              <Button onPress={onLogin}>
                 <Text style={[styles.baseText, styles.loginButtonText]}>
                   Увійти
                 </Text>
@@ -124,11 +107,11 @@ const RegistrationScreen = () => {
 
               <View style={styles.signUpContainer}>
                 <Text style={[styles.showButtonText, styles.baseText]}>
-                  Вже є акаунт?&nbsp;
+                  Немає акаунту?&nbsp;
                 </Text>
-                <TouchableOpacity onPress={onSignIn}>
+                <TouchableOpacity onPress={onSignUp}>
                   <Text style={[styles.signUpButtonText, styles.baseText]}>
-                    Увійти
+                    Зареєструватися
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -140,7 +123,7 @@ const RegistrationScreen = () => {
   );
 };
 
-export default RegistrationScreen;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   baseContainer: {
@@ -159,45 +142,19 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 42,
   },
-  formContainer: {
-    height: "65%",
-    width: SCREEN_WIDTH,
-    backgroundColor: colors.white,
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
-    paddingHorizontal: 16,
-    paddingTop: 92,
-  },
-  background: {
+  image: {
     ...StyleSheet.absoluteFillObject,
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
   },
-  userImageContainer: {
-    position: "absolute",
-    height: 120,
-    width: 120,
-    borderRadius: 16,
-    left: SCREEN_WIDTH * 0.5 - 60,
-    top: -60,
-    backgroundColor: colors.light_gray,
-  },
-  buttonAdd: {
-    position: "absolute",
-    right: -12,
-    bottom: 14,
-    height: 24,
-    width: 24,
-    borderRadius: "50%",
-    borderWidth: 1,
-    borderColor: colors.orange,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonAddImage: {
-    width: 16,
-    height: 16,
-    color: colors.orange,
+  formContainer: {
+    width: SCREEN_WIDTH,
+    height: "50%",
+    backgroundColor: colors.white,
+    borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+    paddingHorizontal: 16,
+    paddingTop: 32,
   },
   title: {
     fontSize: 30,

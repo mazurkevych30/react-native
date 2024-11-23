@@ -1,16 +1,18 @@
 import { FC } from "react";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+
 import { colors } from "../styles/global";
 
 type buttonProps = {
   children: React.ReactNode;
   buttonStyle?: ViewStyle;
+  onPress: () => void;
 };
 
-const Button: FC<buttonProps> = ({ children, buttonStyle }) => {
+const Button: FC<buttonProps> = ({ children, buttonStyle, onPress }) => {
   return (
     <View>
-      <TouchableOpacity style={[styles.button, buttonStyle]}>
+      <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onPress}>
         {children}
       </TouchableOpacity>
     </View>

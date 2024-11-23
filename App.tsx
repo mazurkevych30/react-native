@@ -1,10 +1,12 @@
 // import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
 import RegistrationScreen from "./screens/RegistrationScreen";
+import LoginScreen from "./screens/LoginScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,7 +24,8 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
-  return <RegistrationScreen />;
+  // return <RegistrationScreen />;
+  return <LoginScreen />;
 }
 
 const styles = StyleSheet.create({
