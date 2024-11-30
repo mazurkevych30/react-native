@@ -1,12 +1,13 @@
-// import { StatusBar } from "expo-status-bar";
+import "react-native-gesture-handler";
+
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
-import RegistrationScreen from "./screens/RegistrationScreen";
-import LoginScreen from "./screens/LoginScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import StackNavigator from "./navigation/StackNavigator";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,15 +25,9 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
-  // return <RegistrationScreen />;
-  return <LoginScreen />;
+  return (
+    <NavigationContainer>
+      <StackNavigator />
+    </NavigationContainer>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

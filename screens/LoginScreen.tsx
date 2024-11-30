@@ -11,8 +11,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useState } from "react";
+import { FC, useState } from "react";
+import { StackScreenProps } from "@react-navigation/stack";
 
+import { StackParamList } from "../navigation/StackNavigator";
 import { colors } from "../styles/global";
 
 import Input from "../components/Input";
@@ -26,7 +28,9 @@ type Data = {
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen");
 
-const LoginScreen = () => {
+export type LoginScreenProps = StackScreenProps<StackParamList, "Login">;
+
+const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
   const [formData, setFormData] = useState<Data>({
     email: "",
@@ -44,20 +48,21 @@ const LoginScreen = () => {
   const onLogin = () => {
     const { email, password } = formData;
 
-    if (!email || !password) {
-      Alert.alert("Помилка", "Будь ласка, заповніть всі поля.");
-    } else if (!validateEmail(email)) {
-      Alert.alert(
-        "Помилка",
-        "Будь ласка, введіть електрону адресу у форматі example@gmail.com."
-      );
-    } else {
-      Alert.alert("Credentials", `${email} + ${password}`);
-    }
+    navigation.navigate("Home");
+    // if (!email || !password) {
+    //   Alert.alert("Помилка", "Будь ласка, заповніть всі поля.");
+    // } else if (!validateEmail(email)) {
+    //   Alert.alert(
+    //     "Помилка",
+    //     "Будь ласка, введіть електрону адресу у форматі example@gmail.com."
+    //   );
+    // } else {
+    //   Alert.alert("Credentials", `${email} + ${password}`);
+    // }
   };
 
   const onSignUp = () => {
-    console.log("Sign up!");
+    navigation.navigate("Registration");
   };
 
   const showButton = (

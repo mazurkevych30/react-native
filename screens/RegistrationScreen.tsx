@@ -12,9 +12,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useState } from "react";
+import { FC, useState } from "react";
+import { StackScreenProps } from "@react-navigation/stack";
 
 import { colors } from "../styles/global";
+import { StackParamList } from "../navigation/StackNavigator";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -28,7 +30,12 @@ type Data = {
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-const RegistrationScreen = () => {
+export type RegistrationScreenProps = StackScreenProps<
+  StackParamList,
+  "Registration"
+>;
+
+const RegistrationScreen: FC<RegistrationScreenProps> = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
   const [formData, setFormData] = useState<Data>({
     login: "",
@@ -60,7 +67,7 @@ const RegistrationScreen = () => {
   };
 
   const onSignIn = () => {
-    console.log("Go to login form!");
+    navigation.navigate("Login");
   };
 
   const showButton = (
