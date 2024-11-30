@@ -1,7 +1,6 @@
 import "react-native-gesture-handler";
 
 import { useEffect } from "react";
-import { StyleSheet } from "react-native";
 
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";

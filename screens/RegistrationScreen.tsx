@@ -21,6 +21,7 @@ import { StackParamList } from "../navigation/StackNavigator";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import validateEmail from "../utils/validateEmailUtils";
+import ProfileImage from "../components/ProfileImage";
 
 type Data = {
   login: string;
@@ -89,15 +90,7 @@ const RegistrationScreen: FC<RegistrationScreenProps> = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <View style={styles.formContainer}>
-            <View style={styles.userImageContainer}>
-              <Image />
-              <TouchableOpacity style={styles.buttonAdd}>
-                <Image
-                  style={styles.buttonAddImage}
-                  source={require("../assets/images/plus.png")}
-                />
-              </TouchableOpacity>
-            </View>
+            <ProfileImage containerStyles={styles.userImageContainer} />
 
             <Text style={styles.title}>Реєстрація</Text>
 
@@ -182,29 +175,8 @@ const styles = StyleSheet.create({
   },
   userImageContainer: {
     position: "absolute",
-    height: 120,
-    width: 120,
-    borderRadius: 16,
     left: SCREEN_WIDTH * 0.5 - 60,
     top: -60,
-    backgroundColor: colors.light_gray,
-  },
-  buttonAdd: {
-    position: "absolute",
-    right: -12,
-    bottom: 14,
-    height: 24,
-    width: 24,
-    borderRadius: "50%",
-    borderWidth: 1,
-    borderColor: colors.orange,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonAddImage: {
-    width: 16,
-    height: 16,
-    color: colors.orange,
   },
   title: {
     fontSize: 30,

@@ -7,7 +7,7 @@ import CreatePostNavigator from "./CreatePostNavigator";
 import PostsScreen from "../screens/PostsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { colors } from "../styles/global";
-import { Pressable, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import LogoutIcon from "../assets/icons/LogoutIcon";
 
 const Tab = createBottomTabNavigator();
@@ -18,7 +18,7 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="Post"
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={() => ({
         headerShadowVisible: true,
         headerStyle: {
           backgroundColor: colors.white,
