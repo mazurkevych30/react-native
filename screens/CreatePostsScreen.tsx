@@ -9,13 +9,20 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import React from "react";
+import React, { FC } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../styles/global";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { StackScreenProps } from "@react-navigation/stack";
+import { CreatePostParamList } from "../navigation/CreatePostNavigator";
 
-const CreatePostsScreen = () => {
+type CreatePostsScreenProps = StackScreenProps<
+  CreatePostParamList,
+  "CreatePost"
+>;
+
+const CreatePostsScreen: FC<CreatePostsScreenProps> = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <KeyboardAvoidingView
@@ -25,7 +32,12 @@ const CreatePostsScreen = () => {
       >
         <View>
           <View style={styles.emptyImgContainer}>
-            <TouchableOpacity style={styles.cameraContainer}>
+            <TouchableOpacity
+              style={styles.cameraContainer}
+              onPress={() => {
+                navigation.navigate("Camera");
+              }}
+            >
               <Ionicons name="camera" size={24} color={colors.text_gray} />
             </TouchableOpacity>
             <Image />
