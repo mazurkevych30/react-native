@@ -9,7 +9,6 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { colors } from "../styles/global";
 import { StyleSheet, Text } from "react-native";
 import LogoutIcon from "../assets/icons/LogoutIcon";
-import MapScreen from "../screens/MapScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -147,7 +146,6 @@ const BottomTabNavigator = () => {
           />
         </>
       )}
-      <Tab.Screen name="Map" component={MapScreen} />
     </Tab.Navigator>
   );
 };

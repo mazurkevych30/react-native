@@ -1,30 +1,50 @@
-import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import React, { FC, useEffect, useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { StackParamList } from "../navigation/StackNavigator";
+import { Coords } from "./CreatePostsScreen";
 
-const MapScreen = () => {
+export type MapScreenProps = StackScreenProps<StackParamList, "Map">;
+
+const MapScreen: FC<MapScreenProps> = ({ route }) => {
+  const params = route?.params;
+  const [coordinates, setCoordinates] = useState<Coords>();
+  const [title, setTitle] = useState<string>();
+
+  useEffect(() => {
+    if (!params?.coordinates && !params?.title) return;
+    setTitle(params.title);
+    setCoordinates(params.coordinates);
+  }, [params]);
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.mapStyle}
-        provider={PROVIDER_GOOGLE}
-        region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        mapType="standard"
-        minZoomLevel={15}
-        onMapReady={() => console.log("Map is ready")}
-        onRegionChange={() => console.log("Region change")}
-      >
-        <Marker
-          title="I am here"
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-          description="Hello"
-        />
-      </MapView>
+      {coordinates ? (
+        <MapView
+          style={styles.mapStyle}
+          provider={PROVIDER_GOOGLE}
+          region={{
+            latitude: coordinates?.latitude,
+            longitude: coordinates?.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+          mapType="standard"
+          minZoomLevel={15}
+          onMapReady={() => console.log("Map is ready")}
+          onRegionChange={() => console.log("Region change")}
+        >
+          <Marker
+            title={title}
+            coordinate={{
+              latitude: coordinates.latitude,
+              longitude: coordinates.longitude,
+            }}
+          />
+        </MapView>
+      ) : (
+        <Text style={{ textAlign: "center" }}>...Loading</Text>
+      )}
     </View>
   );
 };
