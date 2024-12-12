@@ -5,8 +5,9 @@ import CreatePostsScreen from "../screens/CreatePostsScreen";
 import CameraScreen from "../screens/CameraScreen";
 
 export type CreatePostParamList = {
-  CreatePost: undefined;
+  CreatePost: { photo?: string };
   Camera: undefined;
+  Post: undefined;
 };
 
 const Stack = createStackNavigator();
@@ -21,7 +22,7 @@ const CreatePostNavigator = () => {
         name="CreatePost"
         component={CreatePostsScreen as React.FC}
       />
-      <Stack.Screen name="Camera" component={CameraScreen} />
+      <Stack.Screen name="Camera" component={CameraScreen as React.FC} />
     </Stack.Navigator>
   );
 };

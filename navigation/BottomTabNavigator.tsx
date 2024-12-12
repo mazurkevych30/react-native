@@ -18,7 +18,7 @@ const BottomTabNavigator = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Map"
+      initialRouteName="Post"
       screenOptions={() => ({
         headerShadowVisible: true,
         headerStyle: {

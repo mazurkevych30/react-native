@@ -1,5 +1,3 @@
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
-import { useRef, useState } from "react";
 import {
   Button,
   Image,
@@ -8,10 +6,20 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import { FC, useRef, useState } from "react";
+import { StackScreenProps } from "@react-navigation/stack";
 
-const CameraScreen = () => {
+import { CreatePostParamList } from "../navigation/CreatePostNavigator";
+
+type CameraScreenProps = StackScreenProps<CreatePostParamList, "Camera">;
+
+const CameraScreen: FC<CameraScreenProps> = ({ navigation }) => {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
+  const [permissionResponse, requestLibraryPermission] =
+    MediaLibrary.usePermissions();
   const cameraRef = useRef<CameraView | null>(null);
   const [photo, setPhoto] = useState<string | null>(null);
 
@@ -31,7 +39,7 @@ const CameraScreen = () => {
       </View>
     );
   }
-  console.log(permission);
+
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
@@ -51,6 +59,17 @@ const CameraScreen = () => {
     setPhoto(null);
   };
 
+  const savePhoto = async () => {
+    if (photo) {
+      navigation.replace("CreatePost", { photo });
+      if (permissionResponse && permissionResponse.status !== "granted") {
+        await requestLibraryPermission();
+      }
+
+      await MediaLibrary.saveToLibraryAsync(photo);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {photo ? (
@@ -60,12 +79,15 @@ const CameraScreen = () => {
             style={{ flex: 1 }}
             resizeMode="cover"
           />
-          <TouchableOpacity
-            style={styles.buttonRetakePhoto}
-            onPress={retakePhoto}
-          >
-            <Text style={styles.text}>Retake Photo</Text>
-          </TouchableOpacity>
+
+          <View style={styles.buttonRetakePhoto}>
+            <TouchableOpacity onPress={retakePhoto}>
+              <Text style={styles.text}>Retake Photo</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={savePhoto}>
+              <Text style={styles.text}>Save Photo</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       ) : (
         <CameraView ref={cameraRef} style={styles.camera} facing={facing}>
@@ -104,7 +126,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     backgroundColor: "transparent",
-    margin: 64,
+    marginBottom: 64,
   },
   button: {
     flex: 1,
@@ -123,7 +145,9 @@ const styles = StyleSheet.create({
   },
   buttonRetakePhoto: {
     position: "absolute",
+    flexDirection: "row",
+    gap: 60,
     alignSelf: "center",
-    bottom: 60,
+    bottom: 64,
   },
 });
