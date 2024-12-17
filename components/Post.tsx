@@ -1,23 +1,26 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import React, { FC, useState } from "react";
-import PostItem, { ItemProps } from "./PostItem";
+import React, { FC } from "react";
+import { PostType } from "../types/PostType";
+import PostItem from "./PostItem";
 
 type PostProps = {
-  DATA: ItemProps[];
+  DATA: PostType[];
 };
 
 const Post: FC<PostProps> = ({ DATA }) => {
-  const renderItem = ({ item }: { item: ItemProps }) => {
-    const { id, title, image, comments, likes, location, coordinates } = item;
+  const renderItem = ({ item }: { item: PostType }) => {
+    const { id, title, photoURL, comments, likes, country, coordinates, user } =
+      item;
 
     return (
       <PostItem
         id={id}
+        user={user}
         title={title}
-        image={image}
+        photoURL={photoURL}
         comments={comments}
         likes={likes}
-        location={location}
+        country={country}
         coordinates={coordinates}
       />
     );

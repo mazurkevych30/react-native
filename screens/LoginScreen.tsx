@@ -20,6 +20,8 @@ import { colors } from "../styles/global";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import validateEmail from "../utils/validateEmailUtils";
+import { useDispatch } from "react-redux";
+import { login } from "../utils/auth";
 
 type Data = {
   email: string;
@@ -32,6 +34,7 @@ export type LoginScreenProps = StackScreenProps<StackParamList, "Login">;
 
 const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState<Data>({
     email: "",
     password: "",
@@ -45,20 +48,20 @@ const LoginScreen: FC<LoginScreenProps> = ({ navigation }) => {
     setIsPasswordVisible((prev) => !prev);
   };
 
-  const onLogin = () => {
+  const onLogin = async () => {
     const { email, password } = formData;
 
-    navigation.navigate("Home");
-    // if (!email || !password) {
-    //   Alert.alert("Помилка", "Будь ласка, заповніть всі поля.");
-    // } else if (!validateEmail(email)) {
-    //   Alert.alert(
-    //     "Помилка",
-    //     "Будь ласка, введіть електрону адресу у форматі example@gmail.com."
-    //   );
-    // } else {
-    //   Alert.alert("Credentials", `${email} + ${password}`);
-    // }
+    if (!email || !password) {
+      Alert.alert("Помилка", "Будь ласка, заповніть всі поля.");
+    } else if (!validateEmail(email)) {
+      Alert.alert(
+        "Помилка",
+        "Будь ласка, введіть електрону адресу у форматі example@gmail.com."
+      );
+    } else {
+      const user = await login({ email, password }, dispatch);
+      if (!user) Alert.alert("Невірний логін або пароль.");
+    }
   };
 
   const onSignUp = () => {

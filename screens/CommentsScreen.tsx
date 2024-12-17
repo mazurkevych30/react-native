@@ -12,41 +12,65 @@ import { Ionicons } from "@expo/vector-icons";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParamList } from "../navigation/StackNavigator";
 import { posts_data } from "../data/posts_data";
-import { CommentType, ItemProps } from "../components/PostItem";
+
 import Input from "../components/Input";
 import { colors } from "../styles/global";
 import CommentItem from "../components/CommentItem";
+import { CommentType } from "../types/CommentType";
+import { getPost, updatePostComment } from "../utils/firestore";
+import { getPostType } from "../types/PostType";
+import { useSelector } from "react-redux";
+import { selectUserInfo } from "../store/authSlice/userSelectors";
 
 export type CommentsScreenProps = StackScreenProps<StackParamList, "Comments">;
 
 const CommentsScreen: FC<CommentsScreenProps> = ({ route }) => {
+  const userInfo = useSelector(selectUserInfo);
   const params = route?.params;
-  const [comment, setComment] = useState<ItemProps>();
+  const [comment, setComment] = useState<getPostType>();
   const [commentText, setCommentText] = useState<string>("");
-
   useEffect(() => {
     if (!params?.id) return;
-    const res = posts_data.find(({ id }) => id === params.id);
-    setComment(res);
+    handletGetData();
   }, [params]);
 
+  const handletGetData = async () => {
+    const res = await getPost(params.id);
+    if (res) {
+      setComment(res);
+    }
+  };
+
+  const handlerAddComment = () => {
+    if (userInfo?.uid && commentText) {
+      updatePostComment(params.id, userInfo.uid, commentText);
+      setCommentText("");
+      handletGetData();
+    }
+  };
+
   const showButton = (
-    <TouchableOpacity style={styles.shownButton}>
+    <TouchableOpacity
+      style={styles.shownButton}
+      onPress={() => handlerAddComment()}
+    >
       <Ionicons name="arrow-up" size={24} color={colors.white} />
     </TouchableOpacity>
   );
 
   const renderItem = ({ item }: { item: CommentType }) => {
-    const { user, text } = item;
-
-    return <CommentItem user={user} text={text} date="2024.12.12 19:00" />;
+    const { uid, text, date_comment } = item;
+    const milliseconds =
+      date_comment.seconds * 1000 + date_comment.nanoseconds / 1000000;
+    const date = new Date(milliseconds);
+    return <CommentItem user={uid} text={text} date={date.toLocaleString()} />;
   };
 
   return (
     <View style={{ flex: 1 }}>
       {comment ? (
         <View style={styles.container}>
-          <Image source={comment.image} style={styles.image} />
+          <Image source={{ uri: comment.photoURL }} style={styles.image} />
           <FlatList
             data={comment.comments}
             renderItem={renderItem}

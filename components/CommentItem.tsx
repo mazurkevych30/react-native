@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { colors } from "../styles/global";
+import { useSelector } from "react-redux";
+import { selectUserInfo } from "../store/authSlice/userSelectors";
 
 type CommentItemProps = {
   user: string;
@@ -9,11 +10,12 @@ type CommentItemProps = {
 };
 
 const CommentItem = ({ user, text, date }: CommentItemProps) => {
+  const userInfo = useSelector(selectUserInfo);
   return (
     <View
       style={[
         styles.container,
-        user === "Owner" && { flexDirection: "row-reverse" },
+        userInfo?.uid == user && { flexDirection: "row-reverse" },
       ]}
     >
       <Image

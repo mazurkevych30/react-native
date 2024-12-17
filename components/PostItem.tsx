@@ -13,40 +13,24 @@ import { colors } from "../styles/global";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StackParamList } from "../navigation/StackNavigator";
-
-export type CommentType = {
-  user: string;
-  text: string;
-};
-
-export type ItemProps = {
-  id: string;
-  coordinates?: Coords;
-  image?: ImageSourcePropType;
-  title: string;
-  comments: CommentType[];
-  likes?: number;
-  location?: string;
-  onButtonPress?: () => void;
-};
+import { PostType } from "../types/PostType";
 
 type NavigationProp = StackNavigationProp<StackParamList, "Map">;
 
-const PostItem: FC<ItemProps> = ({
+const PostItem: FC<PostType> = ({
   id,
-  image,
+  photoURL,
   title,
-  comments,
-  likes,
-  location,
+  comments = [],
+  likes = [],
+  country,
   coordinates,
-  onButtonPress,
 }) => {
   const navigation = useNavigation<NavigationProp>();
 
   return (
     <View style={styles.container}>
-      <Image source={image} style={styles.image} />
+      <Image source={{ uri: photoURL }} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
       <View style={styles.innerContainer}>
         <View style={styles.innerbtnContainer}>
@@ -69,7 +53,7 @@ const PostItem: FC<ItemProps> = ({
               size={24}
               style={styles.chatbubble}
             />
-            <Text style={styles.text}>{likes}</Text>
+            <Text style={styles.text}>{likes.length}</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -82,7 +66,7 @@ const PostItem: FC<ItemProps> = ({
             style={styles.chatbubbleDef}
           />
           <Text style={[styles.text, { textDecorationLine: "underline" }]}>
-            {location?.split(",")[1]}
+            {country}
           </Text>
         </TouchableOpacity>
       </View>

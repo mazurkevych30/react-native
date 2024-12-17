@@ -6,14 +6,56 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
-import { colors } from "../styles/global";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import ProfileImage from "../components/ProfileImage";
 import LogoutIcon from "../assets/icons/LogoutIcon";
+
+import { selectUserInfo } from "../store/authSlice/userSelectors";
+import { colors } from "../styles/global";
+import { PostType } from "../types/PostType";
+import { getUserPosts, updateUserAvatar } from "../utils/firestore";
+import Post from "../components/Post";
+import { logout } from "../utils/auth";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen");
 
 const ProfileScreen = () => {
+  const userInfo = useSelector(selectUserInfo);
+  const [photoURL, setPhotoURL] = useState<string>("");
+  const [user, setUser] = useState<string>("");
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (userInfo?.photoURL) {
+      setPhotoURL(userInfo.photoURL);
+    }
+    if (userInfo?.uid) {
+      setUser(userInfo.uid);
+    }
+
+    getPosts();
+  }, []);
+
+  const getPosts = async () => {
+    if (userInfo?.uid) {
+      const res = await getUserPosts(userInfo?.uid);
+      if (res) {
+        setPosts(res);
+      }
+    }
+  };
+
+  const handlerUpdatePhoto = (uid: string, photo: string) => {
+    updateUserAvatar(uid, photo, dispatch);
+  };
+
+  const onLogout = async () => {
+    await logout(dispatch);
+  };
+
   return (
     <View style={styles.baseContainer}>
       <ImageBackground
@@ -23,13 +65,16 @@ const ProfileScreen = () => {
       />
 
       <View style={styles.container}>
-        <ProfileImage containerStyles={styles.userImageContainer} />
-        <LogoutIcon
-          style={styles.positionLogout}
-          onPress={() => console.log("logout")}
+        <ProfileImage
+          containerStyles={styles.userImageContainer}
+          selectedImage={photoURL}
+          setSelectedImage={setPhotoURL}
+          user={user}
+          handlerUpdatePhoto={handlerUpdatePhoto}
         />
-        <Text style={styles.title}>Natali Romanova</Text>
-        <ScrollView>{/* posts list */}</ScrollView>
+        <LogoutIcon style={styles.positionLogout} onPress={() => onLogout()} />
+        <Text style={styles.title}>{userInfo?.displayName}</Text>
+        <Post DATA={posts} />
       </View>
     </View>
   );

@@ -1,25 +1,45 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { colors } from "../styles/global";
 import Post from "../components/Post";
-import { posts_data } from "../data/posts_data";
+import { selectUserInfo } from "../store/authSlice/userSelectors";
+import { getPosts } from "../utils/firestore";
+import { PostType } from "../types/PostType";
 
 const PostsScreen = () => {
+  const userInfo = useSelector(selectUserInfo);
+  const [posts, setPosts] = useState<PostType[]>([]);
+
+  useEffect(() => {
+    handlerGetPosts();
+  }, []);
+
+  const handlerGetPosts = async () => {
+    const res = await getPosts();
+    if (res) {
+      setPosts(res);
+    }
+  };
+
   return (
     <View style={styles.baseContainer}>
       <View style={styles.infoContainer}>
         <Image
-          source={require("../assets/images/icon.png")}
+          source={
+            userInfo?.photoURL
+              ? { uri: userInfo?.photoURL }
+              : require("../assets/images/icon.png")
+          }
           style={styles.infoImage}
           resizeMode="cover"
         />
         <View>
-          <Text style={styles.text}>Natali Romanova</Text>
-          <Text style={styles.emailText}>email@example.com</Text>
+          <Text style={styles.text}>{userInfo?.displayName}</Text>
+          <Text style={styles.emailText}>{userInfo?.email}</Text>
         </View>
       </View>
-      {/* <ScrollView>posts list</ScrollView> */}
-      <Post DATA={posts_data} />
+      <Post DATA={posts} />
     </View>
   );
 };

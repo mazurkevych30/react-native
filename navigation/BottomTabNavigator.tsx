@@ -9,11 +9,17 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { colors } from "../styles/global";
 import { StyleSheet, Text } from "react-native";
 import LogoutIcon from "../assets/icons/LogoutIcon";
+import { useDispatch } from "react-redux";
+import { logout } from "../utils/auth";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   const [activeTab, setActiveTab] = useState<string>("Post");
+  const dispatch = useDispatch();
+  const onLogout = async () => {
+    await logout(dispatch);
+  };
 
   return (
     <Tab.Navigator
@@ -51,9 +57,7 @@ const BottomTabNavigator = () => {
         component={PostsScreen}
         options={({ navigation }) => ({
           headerTitle: () => <Text style={styles.headerTitle}>Публікації</Text>,
-          headerRight: () => (
-            <LogoutIcon onPress={() => navigation.navigate("Login")} />
-          ),
+          headerRight: () => <LogoutIcon onPress={() => onLogout()} />,
           tabBarIcon: () => <Ionicons name="grid-outline" size={24} />,
         })}
       />

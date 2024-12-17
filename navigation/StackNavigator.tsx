@@ -9,6 +9,8 @@ import MapScreen from "../screens/MapScreen";
 import { Coords } from "../screens/CreatePostsScreen";
 import CommentsScreen from "../screens/CommentsScreen";
 import { colors } from "../styles/global";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const Stack = createStackNavigator();
 
@@ -21,9 +23,10 @@ export type StackParamList = {
 };
 
 const StackNavigator = () => {
+  const user = useSelector((state: RootState) => state.user.userInfo);
+
   return (
     <Stack.Navigator
-      initialRouteName="Login"
       screenOptions={{
         headerShown: false,
         headerTitleAlign: "center",
@@ -36,28 +39,39 @@ const StackNavigator = () => {
         cardStyle: { backgroundColor: colors.white },
       }}
     >
-      <Stack.Screen name="Home" component={BottomTabNavigator as React.FC} />
-      <Stack.Screen name="Login" component={LoginScreen as React.FC} />
-      <Stack.Screen
-        name="Registration"
-        component={RegistrationScreen as React.FC}
-      />
-      <Stack.Screen name="Map" component={MapScreen as React.FC} />
-      <Stack.Screen
-        name="Comments"
-        component={CommentsScreen as React.FC}
-        options={({ navigation }) => ({
-          headerLeft: () => (
-            <Ionicons
-              name="arrow-back"
-              size={24}
-              color={colors.black_primary}
-              onPress={() => navigation.goBack()}
-            />
-          ),
-          headerShown: true,
-        })}
-      />
+      {user ? (
+        <>
+          <Stack.Screen
+            name="Home"
+            component={BottomTabNavigator as React.FC}
+          />
+
+          <Stack.Screen name="Map" component={MapScreen as React.FC} />
+          <Stack.Screen
+            name="Comments"
+            component={CommentsScreen as React.FC}
+            options={({ navigation }) => ({
+              headerLeft: () => (
+                <Ionicons
+                  name="arrow-back"
+                  size={24}
+                  color={colors.black_primary}
+                  onPress={() => navigation.goBack()}
+                />
+              ),
+              headerShown: true,
+            })}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Login" component={LoginScreen as React.FC} />
+          <Stack.Screen
+            name="Registration"
+            component={RegistrationScreen as React.FC}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };

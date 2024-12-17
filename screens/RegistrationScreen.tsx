@@ -22,6 +22,8 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import validateEmail from "../utils/validateEmailUtils";
 import ProfileImage from "../components/ProfileImage";
+import { register } from "../utils/auth";
+import { useDispatch } from "react-redux";
 
 type Data = {
   login: string;
@@ -37,7 +39,9 @@ export type RegistrationScreenProps = StackScreenProps<
 >;
 
 const RegistrationScreen: FC<RegistrationScreenProps> = ({ navigation }) => {
+  const [photoURL, setPhotoURL] = useState<string>("");
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(true);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState<Data>({
     login: "",
     email: "",
@@ -63,7 +67,7 @@ const RegistrationScreen: FC<RegistrationScreenProps> = ({ navigation }) => {
         "Будь ласка, введіть електрону адресу у форматі example@gmail.com."
       );
     } else {
-      Alert.alert("Credentials", `${login} + ${email} + ${password}`);
+      register({ email, password, login, photoURL }, dispatch);
     }
   };
 
@@ -90,7 +94,11 @@ const RegistrationScreen: FC<RegistrationScreenProps> = ({ navigation }) => {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
           <View style={styles.formContainer}>
-            <ProfileImage containerStyles={styles.userImageContainer} />
+            <ProfileImage
+              containerStyles={styles.userImageContainer}
+              selectedImage={photoURL}
+              setSelectedImage={setPhotoURL}
+            />
 
             <Text style={styles.title}>Реєстрація</Text>
 
@@ -118,7 +126,7 @@ const RegistrationScreen: FC<RegistrationScreenProps> = ({ navigation }) => {
             <View style={[styles.innerContainer, styles.buttonContainer]}>
               <Button onPress={onRegister}>
                 <Text style={[styles.baseText, styles.loginButtonText]}>
-                  Увійти
+                  Зареєстуватися
                 </Text>
               </Button>
 

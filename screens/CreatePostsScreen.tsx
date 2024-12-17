@@ -21,6 +21,9 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 
 import { colors } from "../styles/global";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { addPost } from "../utils/firestore";
 
 type CreatePostsScreenProps = StackScreenProps<
   CreatePostParamList,
@@ -42,12 +45,16 @@ const CreatePostsScreen: FC<CreatePostsScreenProps> = ({
   route,
 }) => {
   const params = route?.params;
+  const user = useSelector((state: RootState) => state.user.userInfo);
   const [selectedImage, setSelectedImage] = useState<string>("");
-  const [location, setLocation] = useState<Coords | null>(null);
+  const [location, setLocation] = useState<Coords>();
   const [formData, setFormData] = useState<Data>({
     title: "",
     address: "",
   });
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
 
   useEffect(() => {
     if (!params?.photo) return;
@@ -97,19 +104,26 @@ const CreatePostsScreen: FC<CreatePostsScreenProps> = ({
 
   const onClearData = () => {
     setSelectedImage("");
-    setLocation(null);
     setFormData({
       title: "",
       address: "",
     });
   };
 
-  const onPublic = () => {
-    getCurrentLocation();
-    //Передача данних у бд
-
-    onClearData();
-    navigation.navigate("Post");
+  const onPublic = async () => {
+    const { title, address: country } = formData;
+    if (user) {
+      const res = await addPost(user.uid, {
+        title,
+        photoURL: selectedImage,
+        coordinates: location,
+        country,
+      });
+      if (res) {
+        onClearData();
+        navigation.navigate("Post");
+      }
+    }
   };
 
   return (
