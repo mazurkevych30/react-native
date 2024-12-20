@@ -1,7 +1,6 @@
 import {
   Alert,
   Dimensions,
-  Image,
   ImageBackground,
   Keyboard,
   KeyboardAvoidingView,

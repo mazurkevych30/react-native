@@ -7,6 +7,8 @@ import { Coords } from "./CreatePostsScreen";
 
 export type MapScreenProps = StackScreenProps<StackParamList, "Map">;
 
+const google_api_key = "key";
+
 const MapScreen: FC<MapScreenProps> = ({ route }) => {
   const params = route?.params;
   const [coordinates, setCoordinates] = useState<Coords>();
@@ -23,6 +25,7 @@ const MapScreen: FC<MapScreenProps> = ({ route }) => {
         <MapView
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
+          googleMapId={google_api_key}
           region={{
             latitude: coordinates?.latitude,
             longitude: coordinates?.longitude,

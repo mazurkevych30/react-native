@@ -1,14 +1,6 @@
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { FC } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Coords } from "../screens/CreatePostsScreen";
 import { colors } from "../styles/global";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";

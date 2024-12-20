@@ -1,7 +1,6 @@
 import {
   Dimensions,
   ImageBackground,
-  ScrollView,
   StyleSheet,
   Text,
   View,

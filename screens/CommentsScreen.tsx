@@ -11,7 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { StackScreenProps } from "@react-navigation/stack";
 import { StackParamList } from "../navigation/StackNavigator";
-import { posts_data } from "../data/posts_data";
 
 import Input from "../components/Input";
 import { colors } from "../styles/global";
